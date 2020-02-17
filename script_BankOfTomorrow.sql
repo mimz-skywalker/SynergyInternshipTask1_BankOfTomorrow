@@ -56,3 +56,28 @@ FROM Departments;
 --?	Find the salary of each employee
 SELECT FirstName, LastName, Salary 
 FROM Employees;
+
+--?	Find the full name of each employee
+SELECT FirstName, LastName
+FROM Employees;
+
+--?	Create a query that produces an employ email address by using the employee first and last name. 
+--The user E-mail consists of first name and last name concatenated by a full stop. 
+--The domain of the E-mail is fakecompany.com. 
+--The result must be produced in a separate column named Full name
+SELECT CONCAT(CONCAT(CONCAT(FirstName, '.'), LastName), '@fakecompany.com') AS FullName
+FROM Employees
+
+--?	Find all employ with job title Senior executive
+SELECT * 
+FROM Employees
+WHERE JobTitle = 'Senior executive'
+ORDER BY Employee_ID
+
+--?	Find all employs with name starts with letter S
+SELECT *
+FROM Employees
+WHERE FirstName LIKE 'S%'
+ORDER BY Employee_ID
+
+
