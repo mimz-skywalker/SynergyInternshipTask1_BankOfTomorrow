@@ -44,3 +44,15 @@ CREATE TABLE Towns
   TownName VARCHAR(255) NOT NULL,
   CONSTRAINT Town_PK PRIMARY KEY(Town_ID)
 );
+
+
+
+
+
+--?	Find information about all departments names:
+SELECT DepartmentName 
+FROM Departments; 
+
+--?	Find the salary of each employee
+SELECT FirstName, LastName, Salary 
+FROM Employees;
