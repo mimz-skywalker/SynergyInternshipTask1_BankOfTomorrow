@@ -66,18 +66,59 @@ FROM Employees;
 --The domain of the E-mail is fakecompany.com. 
 --The result must be produced in a separate column named Full name
 SELECT CONCAT(CONCAT(CONCAT(FirstName, '.'), LastName), '@fakecompany.com') AS FullName
-FROM Employees
+FROM Employees;
 
 --?	Find all employ with job title Senior executive
 SELECT * 
 FROM Employees
 WHERE JobTitle = 'Senior executive'
-ORDER BY Employee_ID
+ORDER BY Employee_ID;
 
 --?	Find all employs with name starts with letter S
 SELECT *
 FROM Employees
 WHERE FirstName LIKE 'S%'
-ORDER BY Employee_ID
+ORDER BY Employee_ID;
+
+--?	Find all employees with a name that contains the letter l
+SELECT FirstName, LastName
+FROM Employees
+WHERE CONCAT(FirstName, LastName) LIKE '%l%'
+ORDER BY Employee_ID;
+
+--?	Find all employees that have a salary in the range 2000 – 3000
+SELECT FirstName, LastName, Salary
+FROM Employees
+WHERE Salary BETWEEN 2000 AND 3000
+ORDER BY Employee_ID;
+
+--?	Find all employees that have salaries 2500 / 3000 / 3500 / 5000
+SELECT FirstName, LastName, Salary
+FROM Employees
+WHERE (Salary = 2500) OR (Salary = 3000) OR (Salary = 3500) OR (Salary = 5000) 
+ORDER BY Employee_ID;
+
+--?	Find all employees that do not have a manager
+SELECT FirstName, LastName, Manager_ID
+FROM Employees
+WHERE Manager_ID IS NULL
+ORDER BY Employee_ID;
+
+--?	Find all employees that have a senior position in the company and have a salary greater than 5000. 
+--Order them in decreasing order and by alphabetical order by there first name
+SELECT * 
+FROM Employees
+WHERE JobTitle LIKE '%Senior%' AND (Salary>5000)
+ORDER BY FirstName DESC;
+
+--?	Find the top 5 best-paid employees
+SELECT * 
+FROM Employees
+WHERE ROWNUM <= 5
+ORDER BY Salary DESC;
+
+
+
+
 
 
