@@ -171,19 +171,16 @@ FROM Employees
 WHERE Salary > (SELECT MIN(Salary) FROM Employees) AND  Salary <=((SELECT MIN(Salary) FROM Employees) + (SELECT MIN(Salary) FROM Employees)*0.1);
 
 --?	Find the full name salary and the department of the employees that take the minimum salary in their department.
---UNFINISHED
-SELECT D.Department_ID, D.DepartmentName, MIN(Salary) AS MinSalary 
-FROM ( SELECT E.FirstName, E.LastName, D.Department_ID, D.DepartmentName, MIN(Salary) AS MinSalary
-       FROM Employees E
-       FULL JOIN Departments D
-       ON E.Department_ID = D.Department_ID;) AS D
+SELECT D.Department_ID, D.DepartmentName, B.FirstName, B.LastName, MIN(E.Salary) AS MinSalary
+FROM Employees E
 JOIN Departments D
-ON ENames.Department_ID = D.Department_ID
-GROUP BY D.Department_ID, D.DepartmentName
+ON E.Department_ID = D.Department_ID
+JOIN Employees B
+ON B.Salary = E.Salary
+GROUP BY D.Department_ID, D.DepartmentName, B.FirstName, B.LastName
 ORDER BY D.Department_ID;
 
-                
-                
+                                
 --?	Find the average salary in all department list the department name and the average salary
 SELECT D.Department_ID, D.DepartmentName, AVG(Salary) AS AverageSalary 
 FROM Employees E
@@ -203,18 +200,18 @@ ORDER BY D.Department_ID;
 
 
 --?	Group all employee by the manager
---UNFINISHED
-SELECT A.FirstName AS EmployeeFN, A.LastName AS EmployeeLN, B.FirstName AS ManagerFN, B.LastName AS ManagerLN
+SELECT B.FirstName, B.LastName, COUNT(A.Employee_ID)
 FROM Employees A
-JOIN (SELECT )
+JOIN Employees B
 ON A.Manager_ID = B.Employee_ID
 GROUP BY B.FirstName, B.LastName;
+
 
 
 --?	Find all employees whose names are exactly 5 characters
 SELECT FirstName, LastName
 FROM Employees
-WHERE LENGTH(FirstName) = 5
+WHERE LENGTH(FirstName) = 5;
 
 --?	Create a view that shows all clients that have been in the system today
 CREATE VIEW LogToday AS
@@ -225,11 +222,11 @@ CREATE VIEW LogToday AS
 --?	Change the passwords of all clients that are absent from the system since 10.03.2010
 UPDATE Clients
 SET Client_Password = 'newpass123'
-WHERE Clients.LastLog <= TO_DATE('10-MAR-2010', 'DD-MON-YYYY')
+WHERE Clients.LastLog <= TO_DATE('10-MAR-2010', 'DD-MON-YYYY');
 
 --?	Delete all clients without password
 DELETE FROM Clients
-WHERE Client_Password IS NULL
+WHERE Client_Password IS NULL;
 
 --?	Display the town with max employees 
 SELECT T.TownName, COUNT(Employee_ID) AS EmployeeCount
@@ -242,7 +239,10 @@ GROUP BY T.TownName
 ORDER BY EmployeeCount DESC;
 
 --Create a transaction that deletes the information from the tables, drop all the tables and reroll the transaction at the end of the process
+DECLARE
+  first_transaction
 BEGIN
+ SAVEPOINT sp1;
  DELETE FROM Clients;
  DELETE FROM Departmnets;
  DELETE FROM Employees;
@@ -253,7 +253,7 @@ BEGIN
  DROP TABLE Employees;
  DROP TABLE Towns;
  
- ROLLBACK;
+ ROLLBACK TO sp1;
 END
 
 
